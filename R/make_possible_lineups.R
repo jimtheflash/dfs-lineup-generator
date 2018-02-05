@@ -1,3 +1,6 @@
+# TODO: remove hard coding of positions
+# TODO: add 
+
 make_possible_lineups <- function(player_position_list, salary_cap = 50000, salary_min = 30000) {
   possible_lineups <- expand.grid(lapply(player_position_list, 
                                          function(x) unique(x$uid)), stringsAsFactors = FALSE) %>%
