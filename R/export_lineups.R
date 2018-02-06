@@ -12,6 +12,15 @@ export_lineups <- function(lineups,
   cols_to_import <- lineups %>%
     select(ends_with("salary_id"))
   
+  lu_rows <- nrow(cols_to_import)
+  entry_rows <- nrow(entries)
+  
+  if (lu_rows < entry_rows) {
+    nrows_to_add <- entry_rows - lu_rows
+    temp <- rbind(cols_to_import, cols_to_import[1:nrows_to_add, ])
+    cols_to_import <- temp
+  }
+  
   fixed_names <- gsub("_salary_id", "", names(cols_to_import)) %>%
     toupper()
   
