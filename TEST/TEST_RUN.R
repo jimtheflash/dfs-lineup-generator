@@ -16,8 +16,8 @@ projections_plus_salaries <- add_salary_ids(projections = augmented_projections,
 in_scope_projections <- scope_projections(projections = projections_plus_salaries)
 players_by_position <- split_by_position(in_scope_projections)
 filtered_players <- filter_players_by_position(player_position_list = players_by_position,
-                                               player_pts_rank = 60,
-                                               player_value_rank = 8,
+                                               player_pts_rank = 10,
+                                               player_value_rank = 20,
                                                player_pos_rank = 5)
 possible_lineups <- make_possible_lineups(filtered_players, salary_min = 40000)
 unique_lineups <- make_unique_lineups(possible_lineups)
