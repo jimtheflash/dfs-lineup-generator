@@ -3,7 +3,8 @@ optimize_lineups <- function(unique_lineup_object,
                              n_lineups = 20, 
                              max_exposure = .65,
                              limit_search = 5000,
-                             return_freq_table = TRUE) {
+                             return_freq_table = TRUE,
+                             verbose = FALSE) {
   
   library(dplyr)
   
@@ -93,11 +94,11 @@ optimize_lineups <- function(unique_lineup_object,
       freq_table <- freq_table %>%
         arrange(-Freq)
       
-      print(paste0(nrow(unique_lineups_remaining), " rows remaining"))
-    
+
   }
 
   output_list <- list(lineups = final_lineups, 
                       exposure_table = freq_table)
+
   return(output_list)
 }
