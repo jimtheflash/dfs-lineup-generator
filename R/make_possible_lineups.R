@@ -1,8 +1,10 @@
 # TODO: remove hard coding of positions
-# TODO: add 
 
 make_possible_lineups <- function(player_position_list, salary_cap = 50000, salary_min = 30000) {
-  possible_lineups <- expand.grid(lapply(player_position_list, 
+
+library(dplyr)  
+
+possible_lineups <- expand.grid(lapply(player_position_list, 
                                          function(x) unique(x$uid)), stringsAsFactors = FALSE) %>%
     filter(pg != sg & pg != pf & pg != sf & pg != `c` & pg != `f` & pg != `g` & pg != util &
              sg != pf & sg != sf & sg != `c` & sg != `f` & sg != `g` & sg != util &
@@ -11,7 +13,7 @@ make_possible_lineups <- function(player_position_list, salary_cap = 50000, sala
              `c` != `f` & `c` != `g` & `c` != util &
              `f` != `g` & `f` != util &
              `g` != util)
-  
+
   # attach position salaries
   for (i in names(player_position_list)) {
     pos_df <- data.frame(uid = possible_lineups[[i]])
