@@ -6,7 +6,9 @@ for (f in list.files(pattern = "*.R")) {
 rm(list = setdiff(ls(), lsf.str()))
 
 t1 <- Sys.time()
+
 salaries <- import_salaries("C:/Users/Jim/Documents/dfs/dk/nba/inputs/DKSalaries_20180211_early.csv", 
+
                             from_entry = TRUE)
 salary_lu <- make_salary_lu(salaries, from_entry = TRUE)
 nba_projections <- import_projections()
@@ -35,6 +37,7 @@ entry_list <- import_entries("C:/Users/Jim/Documents/dfs/dk/nba/inputs/DKEntries
 setwd("C:/Users/Jim/Documents/dfs/dk/nba")
 export_lineups(lineups = optimized_lineups$lineups, 
                entries = entry_list,
+               slate = "night",
                randomize_entries = FALSE)
 t2 <- Sys.time()
 t2-t1
