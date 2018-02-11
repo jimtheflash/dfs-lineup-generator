@@ -1,6 +1,6 @@
 augment_projections <- function(projection_data, 
-                                projection_to_use = "ceiling", 
-                                value_projection = "ceiling",
+                                projection_to_use,
+                                value_projection,
                                 game_style = "classic") {
   
   library(dplyr)
@@ -27,9 +27,13 @@ augment_projections <- function(projection_data,
       tolower()
   }
   
-  player_augmented <- na.omit(player_augmented)
-  player_augmented$uid <- 1:nrow(player_augmented)
+  player_augmented_no_na <- filter(player_augmented, !is.na(outcome))
+  player_augmented_no_na$uid <- 1:nrow(player_augmented_no_na)
   
-  return(player_augmented)
+  return_list <- list(augmented_projections = player_augmented_no_na,
+                      omitted_players = setdiff(player_augmented$player_name,
+                                                player_augmented_no_na$player_name))
+  
+  return(return_list)
  
 }
