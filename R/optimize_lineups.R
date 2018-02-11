@@ -1,3 +1,16 @@
+#' Optimize the lineups
+#' 
+#' @param unique_lineup_object List of unique objects from \code{make_unique_lineups}
+#' @param position_list Character vector containing the positions used in the lineups
+#' @param n_lineups The number of lineups to save (default = 20)
+#' @param max_exposure The max percentage of lineups in which a single player can be included (default = 65)
+#' @param limit_search A value used to reduce search space (default 5000)
+#' @param return_freq_table Logical indicating whether to return the frequency table (default = TRUE). Not currently in use
+#' @param verbose Logical. Be chatty or not.  Not currently used, so everything is very, very quiet.
+#' 
+#' @return List of optimal lineups
+#' 
+#' @export
 optimize_lineups <- function(unique_lineup_object,
                              position_list = c("pg", "sg", "pf", "sf", "c", "g", "f", "util"),
                              n_lineups = 20, 

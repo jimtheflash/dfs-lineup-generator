@@ -1,5 +1,14 @@
-# TODO: remove hard coding of positions
-
+#' Create the possible lineups
+#' 
+#' @param player_position_list The list of players and their positions
+#' @param salary_cap Upper limit for spend on a given lineup. Default is 50000
+#' @param salary_min Lower limit for spend on a given lineup. Default is 30000
+#' 
+#' @return TBL of possible lineups
+#' 
+#' @details TODO: remove hard coding of positions
+#' 
+#' @export
 make_possible_lineups <- function(player_position_list, salary_cap = 50000, salary_min = 30000) {
 
   possible_lineups <- expand.grid(lapply(player_position_list, 

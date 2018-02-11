@@ -1,3 +1,12 @@
+#' Import projections
+#' 
+#' @param source The site where projections are gathered.  Currently defaults to "rotogrinders" but is not used.
+#' @param site Betting site. Default is "draftkings"
+#' @param sport Sport for which lineups are generated. Default = "nba"
+#' 
+#' @return imported projections
+#' 
+#' @export
 import_projections <- function(source = "rotogrinders", 
                                site = "draftkings", 
                                sport = "nba") {

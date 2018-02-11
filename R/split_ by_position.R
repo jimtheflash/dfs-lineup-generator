@@ -1,3 +1,8 @@
+#' Function to split out be position
+#' 
+#' @param projections Projection data
+#' 
+#' @export
 split_by_position <- function(projections) {
   
   positions <- c("pg", "sg", "pf", "sf", "c")

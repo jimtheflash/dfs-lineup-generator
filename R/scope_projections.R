@@ -1,3 +1,10 @@
+#' Scoping projections
+#' 
+#' @param projections projection data
+#' 
+#' @description Identifies projections that do not have salary information, and labels them out of scope.
+#' 
+#' @export
 scope_projections <- function(projections) {
   
   scoped_projections <- dplyr::filter(projections, !is.na(salary_id))

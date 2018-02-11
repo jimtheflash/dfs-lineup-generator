@@ -1,3 +1,12 @@
+#' Create the salary lookup table
+#' 
+#' @param salary_import Salary data, generally obtained via \code{import_salaries}
+#' @param site Betting site. Default is "draftkings"
+#' @param game_style One of 'classic' or 'pickem'
+#' @param from_entry Logical. Indicates whether salary_import was generated via Entry file or Salary file from DK.
+#' 
+#' @export
+#' 
 make_salary_lu <- function(salary_import,
                            site = "draftkings",
                            game_style = "classic",
