@@ -2,19 +2,17 @@ augment_projections <- function(projection_data,
                                 projection_to_use,
                                 value_projection,
                                 game_style = "classic") {
-  
-  library(dplyr)
-  
+
   player_augmented <- projection_data %>%
-    mutate(lower_clean_name = tolower(gsub("[^[:alnum:]]", "", player_name)),
+    dplyr::mutate(lower_clean_name = tolower(gsub("[^[:alnum:]]", "", player_name)),
            outcome = projection_data[[projection_to_use]]) %>%
-    mutate(pts_rank = rank(-outcome))
+    dplyr::mutate(pts_rank = rank(-outcome))
   
   if (game_style == "classic") {
     player_augmented <- player_augmented %>%
-      mutate(sal_over_onethousand = salary / 1000) %>%
-      mutate(ppk = outcome / sal_over_onethousand) %>%
-      mutate(ppk_rank = rank(-ppk))
+      dplyr::mutate(sal_over_onethousand = salary / 1000) %>%
+      dplyr::mutate(ppk = outcome / sal_over_onethousand) %>%
+      dplyr::mutate(ppk_rank = rank(-ppk))
     
     pos_split <- strsplit(player_augmented$pos, split = "/", fixed = TRUE)
     
