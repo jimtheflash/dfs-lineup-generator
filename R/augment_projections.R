@@ -1,3 +1,13 @@
+#' Function to augment projections
+#' 
+#' @param projection_data Data containing the projections
+#' @param projection_to_use Name of column containing projection data to use in lineup creation?
+#' @param value_projection Name of column used to project... value...?
+#' @param game_style Classic or PickEm (Default "classic")
+#' 
+#' @return list of augmented projections
+#' 
+#' @export 
 augment_projections <- function(projection_data, 
                                 projection_to_use,
                                 value_projection,
@@ -25,7 +35,7 @@ augment_projections <- function(projection_data,
       tolower()
   }
   
-  player_augmented_no_na <- filter(player_augmented, !is.na(outcome))
+  player_augmented_no_na <- dplyr::filter(player_augmented, !is.na(outcome))
   player_augmented_no_na$uid <- 1:nrow(player_augmented_no_na)
   
   return_list <- list(augmented_projections = player_augmented_no_na,

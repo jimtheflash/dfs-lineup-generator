@@ -10,7 +10,7 @@ import_projections <- function(source = "rotogrinders",
   
   names(projection_import) <- c("player_name", "salary", "tm", "pos", "opp", "ceiling", "floor", "proj")
   
-  projection_import <- filter(projection_import, salary > 0)
+  projection_import <- dplyr::filter(projection_import, salary > 0)
   
   return(projection_import)
   

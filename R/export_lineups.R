@@ -1,3 +1,15 @@
+#' Function to save outputs
+#' 
+#' @param lineups Lineups to save
+#' @param entries Entry data used to convert lineups to proper format
+#' @param site The site where lineups will be used. Used to inform formatting
+#' @param sport The sport of choice
+#' @param randomize_entries Logical. Indicates whether to randomize order entry.
+#' @param file_name The name of the file (If not a full path, it is saved to the current directory)
+#' 
+#' @return Logical indicating success
+#' 
+#' @export
 export_lineups <- function(lineups, 
                            entries, 
                            site = "draftkings", 
@@ -39,4 +51,5 @@ export_lineups <- function(lineups,
             quote = FALSE,
             fileEncoding = "UTF-8")
   
+  return(TRUE)
 }

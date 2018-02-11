@@ -6,31 +6,31 @@ split_by_position <- function(projections) {
   
   for(i in positions) {
     player_by_position[[i]] <- projections %>%
-      filter(pos1 == i | pos2 == i) %>%
-      arrange(pts_rank) %>%
-      mutate(player_position_rank = row_number())
+      dplyr::filter(pos1 == i | pos2 == i) %>%
+      dplyr::arrange(pts_rank) %>%
+      dplyr::mutate(player_position_rank = row_number())
   }
   
   # manually add the guard, forward, utility positions
   player_by_position$g <- rbind(player_by_position$pg, player_by_position$sg) %>%
-    select(-player_position_rank) %>%
-    group_by(player_name) %>%
-    filter(row_number() == 1) %>%
-    ungroup() %>%
-    arrange(pts_rank) %>%
-    mutate(player_position_rank = row_number())
+    dplyr::select(-player_position_rank) %>%
+    dplyr::group_by(player_name) %>%
+    dplyr::filter(row_number() == 1) %>%
+    dplyr::ungroup() %>%
+    dplyr::arrange(pts_rank) %>%
+    dplyr::mutate(player_position_rank = row_number())
   
   player_by_position$f <- rbind(player_by_position$pf, player_by_position$sf) %>%
-    select(-player_position_rank) %>%
-    group_by(player_name) %>%
-    filter(row_number() == 1) %>%
-    ungroup() %>%
-    arrange(pts_rank) %>%
-    mutate(player_position_rank = row_number())
+    dplyr::select(-player_position_rank) %>%
+    dplyr::group_by(player_name) %>%
+    dplyr::filter(row_number() == 1) %>%
+    dplyr::ungroup() %>%
+    dplyr::arrange(pts_rank) %>%
+    dplyr::mutate(player_position_rank = row_number())
   
   player_by_position$util <- projections %>%
-    arrange(pts_rank) %>%
-    mutate(player_position_rank = row_number())
+    dplyr::arrange(pts_rank) %>%
+    dplyr::mutate(player_position_rank = row_number())
   
   return(player_by_position)
   

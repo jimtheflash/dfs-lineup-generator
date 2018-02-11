@@ -1,3 +1,14 @@
+#' Function to augment unique lineups
+#' 
+#' @param unique_lineup_object Object containing unique lineups
+#' @param outcome_object the outcome data
+#' @param salary_object Object containing salary information
+#' 
+#' @description Adds salary information to lineup objects
+#' 
+#' @return data frame containing augmented outputs
+#' 
+#' @export
 augment_unique_lineups <- function(unique_lineup_object, 
                                    outcome_object, 
                                    salary_object) {

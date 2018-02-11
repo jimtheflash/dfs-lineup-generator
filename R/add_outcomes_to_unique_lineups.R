@@ -1,3 +1,12 @@
+#' Function to add outcomes to the unique lineups
+#' 
+#' @param unique_lineup_object An object containing unique outcomes
+#' @param outcome_object the non-unique outcome objects?
+#' @param salary_object object containing salary information
+#' 
+#' @return Data.frame containing augmented lineups
+#' 
+#' @export
 augment_unique_lineups <- function(unique_lineup_object, outcome_object, salary_object) {
   
   outcome_positions <- names(outcome_object)

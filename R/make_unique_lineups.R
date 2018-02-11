@@ -9,9 +9,9 @@ make_unique_lineups <- function(all_possible_lineups) {
   lineupid_vec <- apply(ordered_lineups, 1, function(x) paste(x, collapse = "_"))
   
   unique_lineups <- all_possible_lineups %>%
-    mutate(lineup_id = lineupid_vec) %>%
-    group_by(lineup_id) %>%
-    filter(row_number() == 1) %>%
-    ungroup()
+    dplyr::mutate(lineup_id = lineupid_vec) %>%
+    dplyr::group_by(lineup_id) %>%
+    dplyr::filter(row_number() == 1) %>%
+    dplyr::ungroup()
 
 }
