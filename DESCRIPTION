@@ -6,11 +6,9 @@ Authors@R: c(person("Jim", "Kloet", role = c("aut","cre"), email = "jim.kloet@gm
              person("Anthony", "Shook", role = c("aut")))
 Description: Provides tools for creating optimal lineups for Daily Fantasy sports.
 Encoding: UTF-8
-LazyData: true
 RoxygenNote: 6.0.1
 Imports:
   dplyr,
   yaml,
-  magrittr,
-  doParallel,
-  foreach
+  magrittr
+LazyData: true
