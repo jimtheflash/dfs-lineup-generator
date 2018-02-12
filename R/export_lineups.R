@@ -20,7 +20,7 @@ export_lineups <- function(lineups,
                                               gsub("[^[:alnum:]]", "", Sys.time()), ".csv")) {
 
   cols_to_import <- lineups %>%
-    dplyr::select(ends_with("salary_id"))
+    dplyr::select(dplyr::ends_with("salary_id"))
   
   lu_rows <- nrow(cols_to_import)
   entry_rows <- nrow(entries)

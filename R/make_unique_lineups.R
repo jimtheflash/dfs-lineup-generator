@@ -6,7 +6,7 @@
 make_unique_lineups <- function(all_possible_lineups) {
   
   lineup_matrix <- all_possible_lineups %>%
-    select(-ends_with("_salary")) %>%
+    dplyr::select(-dplyr::ends_with("_salary")) %>%
     as.matrix()
   
   ordered_lineups <- t(apply(lineup_matrix, 1, sort))

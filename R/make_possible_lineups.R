@@ -24,14 +24,14 @@ make_possible_lineups <- function(player_position_list, salary_cap = 50000, sala
   # attach position salaries
   for (i in names(player_position_list)) {
     pos_df <- data.frame(uid = possible_lineups[[i]])
-    lu <- dplyr::select(player_position_list[[i]] %>% ungroup(), uid, salary)
+    lu <- dplyr::select(player_position_list[[i]] %>% dplyr::ungroup(), uid, salary)
     slry <- dplyr::left_join(pos_df, lu, by = "uid")
     new_col <- paste0(i, "_salary")
     possible_lineups[[new_col]] <- as.numeric(slry$salary)
   }
   
   # create a salary filter for valid lineups
-  salary_df <- select(possible_lineups, ends_with("_salary")) %>%
+  salary_df <- dplyr::select(possible_lineups, dplyr::ends_with("_salary")) %>%
     as.data.frame()
   total_salary <- rowSums(salary_df, na.rm = TRUE)
   possible_lineups$allpos_total_salary <- total_salary
