@@ -23,6 +23,7 @@ export_lineups <- function(lineups,
     temp <- rbind(cols_to_import, cols_to_import[1:nrows_to_add, ])
     # TODO: update to include up to 500 lineups
     
+
     cols_to_import <- temp
   }
   
