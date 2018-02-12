@@ -1,3 +1,8 @@
+#' Function to fix NBA names
+#' 
+#' @param salary_lookup Salary lookup table from make_salary_lu
+#' @param projection_list list of projections
+#' 
 fix_nba_names <- function(salary_lookup, projection_list) {
   fixed_salary_lookup <- salary_lookup
   fixed_salary_lookup$lower_clean_name <- gsub("jr$", "", salary_lookup$lower_clean_name)

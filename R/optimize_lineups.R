@@ -1,3 +1,16 @@
+#' Optimize the lineups
+#' 
+#' @param unique_lineup_object List of unique objects from \code{make_unique_lineups}
+#' @param position_list Character vector containing the positions used in the lineups
+#' @param n_lineups The number of lineups to save (default = 20)
+#' @param max_exposure The max percentage of lineups in which a single player can be included (default = 65)
+#' @param limit_search A value used to reduce search space (default 5000)
+#' @param return_freq_table Logical indicating whether to return the frequency table (default = TRUE). Not currently in use
+#' @param verbose Logical. Be chatty or not.  Not currently used, so everything is very, very quiet.
+#' 
+#' @return List of optimal lineups
+#' 
+#' @export
 optimize_lineups <- function(unique_lineup_object,
                              position_list = c("pg", "sg", "pf", "sf", "c", "g", "f", "util"),
                              n_lineups = 20, 
@@ -6,16 +19,14 @@ optimize_lineups <- function(unique_lineup_object,
                              return_freq_table = TRUE,
                              verbose = FALSE) {
   
-  library(dplyr)
-
   final_lineups <- unique_lineup_object %>%
-    arrange(-total_outcome) %>%
-    filter(row_number() <= n_lineups)
+    dplyr::arrange(-total_outcome) %>%
+    dplyr::filter(row_number() <= n_lineups)
   
   unique_lineups_remaining <- unique_lineup_object %>%
-    arrange(-total_outcome) %>%
-    filter(!(lineup_id %in% unique(final_lineups$lineup_id))) %>%
-    filter(row_number() <= limit_search)
+    dplyr::arrange(-total_outcome) %>%
+    dplyr::filter(!(lineup_id %in% unique(final_lineups$lineup_id))) %>%
+    dplyr::filter(row_number() <= limit_search)
   
   freq_table <- final_lineups[, position_list] %>% 
     as.matrix() %>% 
@@ -24,7 +35,7 @@ optimize_lineups <- function(unique_lineup_object,
   names(freq_table) <- c("uid", "Freq")
   
   freq_table <- freq_table %>%
-    arrange(-Freq)
+    dplyr::arrange(-Freq)
   
   while (max(freq_table$Freq) > nrow(final_lineups) * max_exposure) {
     
@@ -32,28 +43,28 @@ optimize_lineups <- function(unique_lineup_object,
       as.numeric()
     
     remaining_lineups_without_overexposed_player <- unique_lineups_remaining %>%
-      filter(apply(unique_lineups_remaining[, position_list], 1, function(x) !max_uid %in% as.numeric(x)))
+      dplyr::filter(apply(unique_lineups_remaining[, position_list], 1, function(x) !max_uid %in% as.numeric(x)))
     
     lu_to_insert <- remaining_lineups_without_overexposed_player %>%
-      arrange(-total_outcome) %>%
-      filter(row_number() == 1)
+      dplyr::arrange(-total_outcome) %>%
+      dplyr::filter(row_number() == 1)
     
     if (nrow(lu_to_insert) == 0) {
       break
     }
     
     lu_to_remove <- final_lineups %>%
-      filter(apply(final_lineups[, position_list], 1, function(x) max_uid %in% as.numeric(x))) %>%
-      arrange(-total_outcome) %>%
-      filter(row_number() == max(row_number()))
+      dplyr::filter(apply(final_lineups[, position_list], 1, function(x) max_uid %in% as.numeric(x))) %>%
+      dplyr::arrange(-total_outcome) %>%
+      dplyr::filter(row_number() == max(row_number()))
       
       final_lineups <- final_lineups %>%
-        filter(lineup_id != lu_to_remove$lineup_id) %>%
+        dplyr::filter(lineup_id != lu_to_remove$lineup_id) %>%
         rbind(lu_to_insert)
       
       unique_lineups_remaining <- unique_lineups_remaining %>%
-        filter(lineup_id != lu_to_remove$lineup_id) %>%
-        filter(lineup_id != lu_to_insert$lineup_id)
+        dplyr::filter(lineup_id != lu_to_remove$lineup_id) %>%
+        dplyr::filter(lineup_id != lu_to_insert$lineup_id)
       
       freq_table <- final_lineups[, position_list] %>% 
         as.matrix() %>% 
@@ -62,7 +73,7 @@ optimize_lineups <- function(unique_lineup_object,
       names(freq_table) <- c("uid", "Freq")
       
       freq_table <- freq_table %>%
-        arrange(-Freq)
+        dplyr::arrange(-Freq)
       
 
   }

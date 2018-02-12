@@ -1,9 +1,15 @@
+#' Function to add salary identification
+#' 
+#' @param projections The unique player projections
+#' @param salaries player salaries to be appended
+#' 
+#' @return tbl containing players and salaries appended
+#' 
+#' @export
 add_salary_ids <- function(projections, salaries) {
-  
-  library(dplyr)
-  
+
   players_plus_salary_id <- projections %>%
-    left_join(select(salaries, "salary_id", "lower_clean_name"), 
+    dplyr::left_join(dplyr::select(salaries, "salary_id", "lower_clean_name"), 
               by = "lower_clean_name")
   
   return(players_plus_salary_id)
