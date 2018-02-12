@@ -3,7 +3,9 @@
 #' @param lineups Lineups to save
 #' @param entries Entry data used to convert lineups to proper format
 #' @param site The site where lineups will be used. Used to inform formatting
-#' @param sport The sport of choice
+#' @param sport The sport of choice 
+#' @param slate the Slate being played (character)
+#' @param max_lineups number of lineups to export
 #' @param randomize_entries Logical. Indicates whether to randomize order entry.
 #' @param file_name The name of the file (If not a full path, it is saved to the current directory)
 #' 
@@ -14,10 +16,13 @@ export_lineups <- function(lineups,
                            entries, 
                            site = "draftkings", 
                            sport = "nba",
-                           randomize_entries = TRUE,
+                           slate = NULL,
+                           max_lineups = 500,
+                           randomize_entries = FALSE,
                            file_name = paste0(site, "_", 
                                               sport, "_", 
-                                              gsub("[^[:alnum:]]", "", Sys.time()), ".csv")) {
+                                              gsub("[^[:alnum:]]", "", Sys.Date()), "_",
+                                              slate, ".csv")) {
 
   cols_to_import <- lineups %>%
     dplyr::select(dplyr::ends_with("salary_id"))
