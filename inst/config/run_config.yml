@@ -1,0 +1,31 @@
+## Test Config
+# Based on providing ALL the information required for building a lineup through TEST_RUN
+
+# Slate ID - used to automatically scrape from DK
+slate_id: 17616
+
+# Slate Name - some custom name, appended to output
+slate_name: 'late'
+
+# Projections to Use
+projections_to_use: {projection_to_use: "proj", value_projection: "proj"}
+
+# player filters
+player_filters: {player_pts_rank: 40,
+                  player_value_rank: 10,
+                  player_pos_rank: 5}
+
+# Lineup Data
+lineup_config: {salary_min: 41000,
+                salary_max: 50000,
+                n_lineups: 20,
+                limit_search: 5000,
+                max_exposure: .6)}
+                
+# Where to save
+final_lineup_file: "C:/Users/anthony/Desktop/Test.csv"
+
+# Other things to include?
+# sport: 'nba'
+# projection_source: 'rotogrinders'
+
