@@ -74,7 +74,7 @@ generate_lineups_from_yaml <- function(config_yaml, optional_file = NULL){
   entry_list <- import_entries(current_slate)
   
   export_lineups(lineups = optimized_lineups$lineups, 
-                 file_name = 'C:/Users/anthony/Desktop/WHATEVER.csv', 
+                 file_name = config$final_lineup_file, 
                  entries = entry_list,
                  randomize_entries = FALSE)
   t2 <- Sys.time()
