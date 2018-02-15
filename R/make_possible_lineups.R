@@ -11,8 +11,6 @@
 #' @export
 make_possible_lineups <- function(player_position_list, salary_cap = 50000, salary_min = 30000) {
   
-  browser()
-
   possible_lineups <- expand.grid(lapply(player_position_list, 
                                          function(x) unique(x$uid)), stringsAsFactors = FALSE) %>%
     dplyr::filter(pg != sg & pg != pf & pg != sf & pg != `c` & pg != `f` & pg != `g` & pg != util &
