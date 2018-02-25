@@ -13,7 +13,6 @@ make_possible_lineups <- function(player_position_list,
                                   salary_cap = 50000, 
                                   salary_min = 49000) {
   
-  # what do we want to do here? i think it's find all possible lineups for a set of players
   browser()
   
   position_list <- names(player_position_list)
@@ -54,11 +53,37 @@ make_possible_lineups <- function(player_position_list,
                                 stringsAsFactors = FALSE)
     
     if (ncol(combined_raw) == 2) {
-      static_num <- as.numeric(combined_raw$static)
       combined_mat <- matrix(nrow = length(static_num), ncol = 2)
-      combined_mat[, 1] <- static_num
+      combined_mat[, 1] <- as.numeric(combined_raw$static)
       combined_mat[, 2] <- combined_raw$dynamic
-      sort_vec <- apply(combined_mat, 1, sort)
+      sort_vec <- as.matrix(t(apply(combined_mat, 1, sort)))
+      filter_vec <- sort_vec[, 1] != sort_vec[, 2]
+      filtered_mat <- combined_mat[filter_vec, ]
+      
+      filtered_mat_combos <- paste0(filtered_mat[, 1], ";", filtered_mat[, 2])
+      
+      filtered_mat_combo_table <- table(filtered_mat_combos)
+      
+      if (max(filtered_mat_combo_table) == 1) {
+        
+        output_mat <- matrix(rep(rep(0, nrow(filtered_mat)), length(position_list)), ncol = length(position_list))
+        output_mat[, c(1:2)] <- filtered_mat
+        output_df <- as.data.frame(output_mat)
+        names(output_df) <- position_list
+        
+        exhausted_positions[length(exhausted_positions) + 1] <- p
+        
+        next
+        
+      }
+      
+      duped_combos <- names(filtered_mat_combo_table)[filtered_mat_combo_table > 1]
+      dupe_filter_vec <- !(filtered_mat_combos %in% duped_combos)
+      deduped_filtered_mat <- filtered_mat[]
+        
+      exhausted_positions[length(exhausted_positions) + 1] <- p
+      
+      next
     }
     
     split_static <- strsplit(combined_raw$static, split = ";")
