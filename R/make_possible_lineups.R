@@ -6,14 +6,13 @@
 #' 
 #' @return TBL of possible lineups
 #' 
-#' @details TODO: remove hard coding of positions
+#' @details TODO: ADD SALARY FILTERING PARAMETERS
 #' 
 #' @export
 make_possible_lineups <- function(player_position_list, 
                                   salary_cap = 50000, 
                                   salary_min = 49000) {
   
-  browser()
   
   position_list <- names(player_position_list)
   
@@ -51,76 +50,32 @@ make_possible_lineups <- function(player_position_list,
     
     combined_raw <- expand.grid(static = unique_combo_vectors, dynamic = unique_new_uid,
                                 stringsAsFactors = FALSE)
-    
-    if (ncol(combined_raw) == 2) {
-      combined_mat <- matrix(nrow = length(combined_raw$static), ncol = 2)
-      combined_mat[, 1] <- as.numeric(combined_raw$static)
-      combined_mat[, 2] <- combined_raw$dynamic
-      sort_vec <- as.matrix(t(apply(combined_mat, 1, sort)))
-      filter_vec <- sort_vec[, 1] != sort_vec[, 2]
-      filtered_mat <- combined_mat[filter_vec, ]
-      
-      filtered_mat_combos <- paste0(filtered_mat[, 1], ";", filtered_mat[, 2])
-      
-      filtered_mat_combo_table <- table(filtered_mat_combos)
-      
-       if (max(filtered_mat_combo_table) == 1) {
-        
-        output_mat <- matrix(rep(rep(0, nrow(filtered_mat)), length(position_list)), ncol = length(position_list))
-        output_mat[, c(1:2)] <- filtered_mat
-        output_df <- as.data.frame(output_mat)
-        names(output_df) <- position_list
-        
-        exhausted_positions[length(exhausted_positions) + 1] <- p
-        
-        next
-        
-      }
-      
-      deduped_combos_mat <- filtered_mat %>%
-        as.data.frame() %>%
-        dplyr::mutate(combos = as.character(filtered_mat_combos)) %>%
-        dplyr::group_by(combos) %>%
-        dplyr::filter(row_number() == 1) %>% # explicitly calling dplyr::row_number() caused error
-        dplyr::ungroup() %>%
-        dplyr::select(-combos) %>%
-        as.matrix()
-      
-      
-      output_mat <- matrix(rep(rep(0, nrow(deduped_combos_mat)), length(position_list)), ncol = length(position_list))
-      output_mat[, c(1:2)] <- deduped_combos_mat
-      output_df <- as.data.frame(output_mat)
-      names(output_df) <- position_list
-
-
-        
-      exhausted_positions[length(exhausted_positions) + 1] <- p
-      
-      next
-    }
-    
+       
     split_static <- strsplit(combined_raw$static, split = ";")
-    
     split_static_mat <- do.call(rbind, split_static)
     split_static_mat <- apply(split_static_mat, 2, as.numeric)
-    
     combined_num_mat <- cbind(split_static_mat, as.numeric(combined_raw$dynamic))
-    
-    split_static_df <- as.data.frame(split_static_mat)
-    names(split_static_df) <- exhausted_positions
-    
-    combined_
-
+    combined_num_mat_filter <- apply(combined_num_mat, 1, function(x) length(unique(x)) == length(x))
+    filtered_num_mat <- combined_num_mat[combined_num_mat_filter, ]
+    filtered_sort_mat <- as.matrix(t(apply(filtered_num_mat, 1, sort)))
+    filtered_sort_vec <- apply(filtered_sort_mat, 1, function(x) paste(x, collapse = ";"))
+    deduped_filtered_tbl <- filtered_sort_mat %>%
+      as.data.frame() %>%
+      dplyr::mutate(combos = as.character(filtered_sort_vec)) %>%
+      dplyr::group_by(combos) %>%
+      dplyr::filter(row_number() == 1) %>%
+      dplyr::ungroup() %>%
+      dplyr::select(-combos)
+    output_mat <- 
+      matrix(rep(rep(0, nrow(deduped_filtered_tbl)), length(position_list)), ncol = length(position_list))
+    output_mat[, c(1:ncol(deduped_filtered_tbl))] <- as.matrix(deduped_filtered_tbl)
+    output_df <- as.data.frame(output_mat)
+    names(output_df) <- position_list
     exhausted_positions[length(exhausted_positions) + 1] <- p
-    
   }
   
-
-
-
-    
-    
-    
+  return(output_df)
+  
   
   }
   
