@@ -1,15 +1,19 @@
 #' Function to split out be position
 #' 
 #' @param projections Projection data
+#' @param entry_list Entry list with position names as headers
 #' 
 #' @export
-split_by_position <- function(projections) {
+split_by_position <- function(projections, entries) {
   
-  positions <- c("pg", "sg", "pf", "sf", "c")
+  browser()
   
-  player_by_position <- list()
+  position_list <- entries %>%
+    dplyr::select(-ends_with("Fee"), -ends_with("ID"), -ends_with("Name")) %>%
+    names() %>%
+    tolower()  
   
-  for(i in positions) {
+  for(i in position_list) {
     player_by_position[[i]] <- projections %>%
       dplyr::filter(pos1 == i | pos2 == i) %>%
       dplyr::arrange(pts_rank) %>%

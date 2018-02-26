@@ -2,17 +2,15 @@
 #' 
 #' @param unique_lineup_object Object containing unique lineups
 #' @param outcome_object the outcome data
-#' @param salary_object Object containing salary information
 #' 
-#' @description Adds salary information to lineup objects
+#' @description Adds projection information to unique lineups
 #' 
-#' @return data frame containing augmented outputs
+#' @return data frame containing augmented unique lineups
 #' 
 #' @export
 augment_unique_lineups <- function(unique_lineup_object, 
-                                   outcome_object, 
-                                   salary_object) {
-
+                                   outcome_object) {
+  
   outcome_positions <- names(outcome_object)
   lu_outcome <- do.call(rbind, outcome_object) %>%
     dplyr::group_by(uid) %>%
@@ -25,10 +23,10 @@ augment_unique_lineups <- function(unique_lineup_object,
     uid_outcome <- dplyr::inner_join(uid_column, lu_outcome, by = "uid")
     projection_mat[, i] <- uid_outcome$outcome
   }
+  
   projections <- rowSums(projection_mat)
   
-  
-  
+  output_df <- data.frame(unique_lineup_object, outcome = projections)
   
   return(output_df)
   
