@@ -1,10 +1,11 @@
 #' Function to split out be position
 #' 
 #' @param projections Projection data
-#' @param entry_list Entry list with position names as headers
+#' @param entry_list Entry list with position names as some of the headers
+#' @param multiple_positions vector of position names that use multiple positions
 #' 
 #' @export
-split_by_position <- function(projections, entries) {
+split_by_position <- function(projections, entries, multiple_positions = c("util", "flex", "g", "f")) {
   
   browser()
   
@@ -13,12 +14,28 @@ split_by_position <- function(projections, entries) {
     names() %>%
     tolower()  
   
+  player_by_position <- list()
+  player_by_position[1:length(position_list)] <- 0
+  names(player_by_position) <- position_list
+  
   for(i in position_list) {
+    
+    if(i %in% multiple_positions) {
+      next
+    }
+    
     player_by_position[[i]] <- projections %>%
       dplyr::filter(pos1 == i | pos2 == i) %>%
       dplyr::arrange(pts_rank) %>%
       dplyr::mutate(player_position_rank = row_number())
   }
+  
+  special_pos <- names(player_by_position)[names(player_by_position) %in% multiple_positions]
+  
+  for (j in special_pos) {
+    if ()
+  }
+  
   
   # manually add the guard, forward, utility positions
   player_by_position$g <- rbind(player_by_position$pg, player_by_position$sg) %>%
