@@ -2,6 +2,7 @@
 #' 
 #' @param lineups Lineups to save
 #' @param entries Entry data used to convert lineups to proper format
+#' @param lookup Dataframe for linking salary_id to 
 #' @param site The site where lineups will be used. Used to inform formatting
 #' @param sport The sport of choice
 #' @param slate the slate (e.g., night, late, etc.)
@@ -13,7 +14,8 @@
 #' 
 #' @export
 export_lineups_new <- function(lineups, 
-                           entries, 
+                           entries,
+                           lookup,
                            site = "draftkings", 
                            sport = "nba",
                            slate = NULL,
@@ -23,9 +25,15 @@ export_lineups_new <- function(lineups,
                                               sport, "_", 
                                               gsub("[^[:alnum:]]", "", Sys.Date()), "_",
                                               slate, ".csv")) {
+  
+  browser()
 
-  cols_to_import <- lineups %>%
-    dplyr::select(dplyr::ends_with("salary_id"))
+  pos_names <- entries %>%
+    dplyr::select(-dplyr::ends_with("ID"), -dplyr::ends_with("Name"), -dplyr::ends_with("Fee")) %>%
+    names() %>%
+    tolower()
+  
+  cols_to_import <- lineups[, names(lineups) %in% pos_names]
   
   num_import_rows <- nrow(cols_to_import)
   entry_rows <- nrow(entries)
@@ -43,8 +51,7 @@ export_lineups_new <- function(lineups,
   }
   
   
-  fixed_names <- gsub("_salary_id", "", names(cols_to_import)) %>%
-    toupper()
+  fixed_names <- toupper(pos_names)
   
   names(cols_to_import) <- fixed_names
   

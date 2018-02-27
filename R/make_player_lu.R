@@ -1,0 +1,55 @@
+#' Create the salary lookup table
+#' 
+#' @param salary_import Salary data, generally obtained via \code{import_salaries}
+#' @param player_list Projections or other imported players with uid's assigned
+#' @param site Betting site. Default is "draftkings"
+#' @param game_style One of 'classic' or 'pickem'
+#' @param from_entry Logical. Indicates whether salary_import was generated via Entry file or Salary file from DK.
+#' 
+#' @export
+#' 
+make_player_lu <- function(salary_import,
+                           player_list,
+                           site = "draftkings",
+                           game_style = "classic",
+                           from_entry = FALSE) {
+  
+  if (from_entry == TRUE) {
+    
+    salary_import_clean <- salary_import
+    names(salary_import_clean) <- gsub("[^[:alnum:]]", "", names(salary_import_clean)) %>% 
+      tolower()
+    
+  } else {
+    
+    salary_import_clean <- salary_import %>%
+      dplyr::select(-dplyr::ends_with("ID"), -dplyr::ends_with("Name"), -dplyr::ends_with("Fee"))
+    new_names <- as.character(salary_import_clean[1, ])
+    names(salary_import_clean) <- gsub("[^[:alnum:]]", "", new_names) %>% 
+      tolower()
+  }
+  
+  if (game_style == "classic") {
+    salary_lu <- suppressWarnings(
+      data.frame(player_name = salary_import_clean$name,
+                 salary_id = as.numeric(salary_import_clean$id),
+                 salary = as.numeric(salary_import_clean$salary),
+                 stringsAsFactors = FALSE) %>%
+        dplyr::filter(player_name != "Name" & !is.na(player_name) & !is.na(salary_id))) 
+  }
+  
+  if (game_style == "pickem") {
+    salary_lu <- suppressWarnings(
+      data.frame(player_name = salary_import_clean$name,
+                 salary_id = as.numeric(salary_import_clean$id),
+                 tier = salary_import_clean$rosterposition,
+                 stringsAsFactors = FALSE) %>%
+        dplyr::filter(player_name != "Name" & !is.na(player_name) & !is.na(salary_id)))
+  }
+  
+  salary_lu <- salary_lu %>%
+    dplyr::mutate(lower_clean_name = tolower(gsub("[^[:alnum:]]", "", player_name)))
+  
+  return(salary_lu)
+  
+}
