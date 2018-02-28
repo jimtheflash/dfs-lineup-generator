@@ -56,7 +56,7 @@ export_lineups_new <- function(lineups,
   for (i in names(cols_to_import)) {
     join_df <- data.frame(pos = cols_to_import[[i]])
     joined <- join_df %>%
-      dplyr::left_join(select(lookup, "uid", "salary_id"), by = c("pos" = "uid"))
+      dplyr::left_join(dplyr::select(lookup, "uid", "salary_id"), by = c("pos" = "uid"))
     replaced_salaries[[i]] <- joined$salary_id
   }
   

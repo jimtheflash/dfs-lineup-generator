@@ -4,8 +4,6 @@
 #' @param n_lineups The number of lineups to save (default = 20)
 #' @param max_exposure The max percentage of lineups in which a single player can be included (default = 65)
 #' @param limit_search A value used to reduce search space (default 5000)
-#' @param return_freq_table Logical indicating whether to return the frequency table (default = TRUE). Not currently in use
-#' @param verbose Logical. Be chatty or not.  Not currently used, so everything is very, very quiet.
 #' 
 #' @return List of optimal lineups
 #' 
@@ -50,14 +48,15 @@ optimize_lineups <- function(unique_lineup_object,
     
     remaining_lineup_filter <- apply(remaining_lineups, 1, function(x) max_uid %in% unlist(x))
     
-    if (length(remaining_lineup_filter) == 0) {
-      filtered_lineups <- remaining_lineups
+    if (sum(remaining_lineup_filter) == length(remaining_lineup_filter)) {
+      output_list <- list(lineups = final_lineups, 
+                          exposure_table = freq_table)
+      
+      return(output_list)
     }
     
-    if (length(remaining_lineup_filter) > 0) {
-      filtered_lineups <- remaining_lineups[!remaining_lineup_filter, ]
-    }
-    
+    filtered_lineups <- remaining_lineups[!remaining_lineup_filter, ]
+
     highest_score <- suppressWarnings(max(filtered_lineups$outcome))
     lu_to_insert <- filtered_lineups[filtered_lineups$outcome == highest_score, ]
     
@@ -89,4 +88,5 @@ optimize_lineups <- function(unique_lineup_object,
                       exposure_table = freq_table)
 
   return(output_list)
+  
 }
