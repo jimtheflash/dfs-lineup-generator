@@ -58,7 +58,7 @@ optimize_lineups <- function(unique_lineup_object,
       filtered_lineups <- remaining_lineups[!remaining_lineup_filter, ]
     }
     
-    highest_score <- max(filtered_lineups$outcome)
+    highest_score <- suppressWarnings(max(filtered_lineups$outcome))
     lu_to_insert <- filtered_lineups[filtered_lineups$outcome == highest_score, ]
     
     if (nrow(lu_to_insert) != 1) {

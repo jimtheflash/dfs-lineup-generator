@@ -36,8 +36,7 @@ augment_projections <- function(projection_data,
   }
   
   player_augmented_no_na <- dplyr::filter(player_augmented, !is.na(outcome))
-  player_augmented_no_na$uid <- 1:nrow(player_augmented_no_na)
-  
+
   return_list <- list(augmented_projections = player_augmented_no_na,
                       omitted_players = setdiff(player_augmented$player_name,
                                                 player_augmented_no_na$player_name))

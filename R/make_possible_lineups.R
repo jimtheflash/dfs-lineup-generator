@@ -4,8 +4,6 @@
 #' @param salary_cap Upper limit for spend on a given lineup. Default is 50000
 #' @param salary_min Lower limit for spend on a given lineup. Default is 49000
 #' 
-#' @return TBL of possible lineups
-#' 
 #' @details Should there be a points filter here?
 #' 
 #' @export

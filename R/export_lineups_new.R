@@ -26,8 +26,6 @@ export_lineups_new <- function(lineups,
                                               gsub("[^[:alnum:]]", "", Sys.Date()), "_",
                                               slate, ".csv")) {
   
-  browser()
-
   pos_names <- entries %>%
     dplyr::select(-dplyr::ends_with("ID"), -dplyr::ends_with("Name"), -dplyr::ends_with("Fee")) %>%
     names() %>%
@@ -50,15 +48,26 @@ export_lineups_new <- function(lineups,
     cols_to_import <- cols_to_import[c(1:entry_rows), ]
   }
   
+  replaced_salaries <- matrix(ncol = ncol(cols_to_import),
+                              nrow = nrow(cols_to_import)) %>%
+    as.data.frame()
+  names(replaced_salaries) <- names(cols_to_import)
+  
+  for (i in names(cols_to_import)) {
+    join_df <- data.frame(pos = cols_to_import[[i]])
+    joined <- join_df %>%
+      dplyr::left_join(select(lookup, "uid", "salary_id"), by = c("pos" = "uid"))
+    replaced_salaries[[i]] <- joined$salary_id
+  }
   
   fixed_names <- toupper(pos_names)
   
-  names(cols_to_import) <- fixed_names
+  names(replaced_salaries) <- fixed_names
   
   entries_filled <- entries
   
   for (i in fixed_names) {
-    entries_filled[[i]] <- cols_to_import[[i]]
+    entries_filled[[i]] <- replaced_salaries[[i]]
   }
   
   if (randomize_entries == TRUE) {
