@@ -1,13 +1,10 @@
-setwd("C:/Users/Jim/Documents/git_repos/dfs_lineup_generator/R")
-for (f in list.files(pattern = "*.R")) {
-  source(f)
-}
-
 rm(list = setdiff(ls(), lsf.str()))
+
+devtools::load_all("C:/Users/Jim/Documents/git_repos/dfs_lineup_generator")
 
 t1 <- Sys.time()
 
-salaries <- import_salaries("C:/Users/Jim/Documents/dfs/dk/nba/inputs/DKSalaries_20180211_early.csv", 
+salaries <- import_salaries("C:/Users/Jim/Documents/dfs/dk/nba/inputs/DKSalaries_20180223_night.csv", 
 
                             from_entry = TRUE)
 salary_lu <- make_salary_lu(salaries, from_entry = TRUE)
@@ -33,7 +30,7 @@ optimized_lineups <- optimize_lineups(unique_lineup_object = augmented_unique_li
                                       limit_search = 50000,
                                       max_exposure = .6)
 
-entry_list <- import_entries("C:/Users/Jim/Documents/dfs/dk/nba/inputs/DKEntries_20180211_early.csv")
+entry_list <- import_entries("C:/Users/Jim/Documents/dfs/dk/nba/inputs/DKEntries_20180223_night.csv")
 setwd("C:/Users/Jim/Documents/dfs/dk/nba")
 export_lineups(lineups = optimized_lineups$lineups, 
                entries = entry_list,

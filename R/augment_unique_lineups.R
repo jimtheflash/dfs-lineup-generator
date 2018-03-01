@@ -2,41 +2,31 @@
 #' 
 #' @param unique_lineup_object Object containing unique lineups
 #' @param outcome_object the outcome data
-#' @param salary_object Object containing salary information
 #' 
-#' @description Adds salary information to lineup objects
+#' @description Adds projection information to unique lineups
 #' 
-#' @return data frame containing augmented outputs
+#' @return data frame containing augmented unique lineups
 #' 
 #' @export
 augment_unique_lineups <- function(unique_lineup_object, 
-                                   outcome_object, 
-                                   salary_object) {
+                                   outcome_object) {
   
-  
-  output_df <- unique_lineup_object
   outcome_positions <- names(outcome_object)
-  salary_join <- dplyr::select(salary_object, lower_clean_name, salary_id)
-  
-  for (i in outcome_positions) {
-    pos_df <- data.frame(uid = unique_lineup_object[[i]])
-    lu <- dplyr::select((outcome_object[[i]] %>% dplyr::ungroup()), uid, lower_clean_name, outcome)
-    lu_joined <- dplyr::left_join(pos_df, lu, by = "uid") %>%
-      dplyr::left_join(salary_join, by = "lower_clean_name")
-
-    new_name <- paste0(i, "_lower_clean_name")
-    new_outcome <- paste0(i, "_outcome")
-    new_salary_id <- paste0(i, "_salary_id")
-    output_df[[new_name]] <- lu_joined$lower_clean_name
-    output_df[[new_outcome]] <- lu_joined$outcome
-    output_df[[new_salary_id]] <- lu_joined$salary_id
+  lu_outcome <- do.call(rbind, outcome_object) %>%
+    dplyr::group_by(uid) %>%
+    dplyr::filter(row_number() == 1) %>%
+    dplyr::ungroup() %>%
+    dplyr::select(uid, outcome)
+  projection_mat <- matrix(nrow = nrow(unique_lineup_object), ncol = ncol(unique_lineup_object))
+  for (i in 1:ncol(unique_lineup_object)) {
+    uid_column <- data.frame(uid = unique_lineup_object[, i])
+    uid_outcome <- dplyr::inner_join(uid_column, lu_outcome, by = "uid")
+    projection_mat[, i] <- uid_outcome$outcome
   }
   
-  output_df$total_outcome <- dplyr::select(output_df, dplyr::ends_with("outcome")) %>%
-    rowSums() %>%
-    as.numeric()
+  projections <- rowSums(projection_mat)
   
-  
+  output_df <- data.frame(unique_lineup_object, outcome = projections)
   
   return(output_df)
   
