@@ -45,7 +45,8 @@ make_salary_lu <- function(salary_import,
   }
   
   salary_lu <- salary_lu %>%
-   dplyr::mutate(lower_clean_name = tolower(gsub("[^[:alnum:]]", "", player_name)))
+   dplyr::mutate(lower_clean_name = tolower(gsub("[^[:alnum:]]", "", player_name)),
+                 uid = 1:nrow(salary_lu))
   
   return(salary_lu)
   
