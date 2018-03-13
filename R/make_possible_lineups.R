@@ -30,7 +30,7 @@ make_possible_lineups <- function(player_position_list,
       output_df_expanded[[p]] <- unique(pos_df$uid)
       output_df <- output_df_expanded
       exhausted_positions[length(exhausted_positions) + 1] <- p
-      
+      gc()
       next
       
     }
@@ -90,6 +90,7 @@ make_possible_lineups <- function(player_position_list,
     names(output_df) <- position_list
     
     exhausted_positions[length(exhausted_positions) + 1] <- p
+    gc()
   }
 
   salary_join_total_df <- do.call(rbind, player_position_list) %>%
@@ -107,6 +108,7 @@ make_possible_lineups <- function(player_position_list,
       dplyr::select(salary) %>%
       unlist()
     sal_mat[, j] <- sal_vec
+    gc()
   }
   
   sal_filt <- rowSums(sal_mat) >= salary_min
