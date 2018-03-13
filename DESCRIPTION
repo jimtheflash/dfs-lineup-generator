@@ -1,4 +1,4 @@
-Package: dfs-lineup-generator
+Package: dfsLineupGenerator
 Type: Package
 Title: Optimizes Daily Fantasy lineups
 Version: 0.1.0
