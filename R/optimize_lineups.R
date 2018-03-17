@@ -18,16 +18,18 @@ optimize_lineups <- function(unique_lineup_object,
   unique_lineup_object$lineupid <- lineup_id
   
   final_lineups <- unique_lineup_object %>%
+    dplyr::filter(games > 1) %>%
     dplyr::arrange(-outcome) %>%
     dplyr::filter(row_number() <= n_lineups)
   
   remaining_lineups <- unique_lineup_object %>%
+    dplyr::filter(games > 1) %>%
     dplyr::filter(lineupid <= limit_search) %>%
     dplyr::filter(!(lineupid %in% unique(final_lineups$lineupid))) %>%
     dplyr::arrange(-outcome)
   
   freq_table <- final_lineups %>%
-    dplyr::select(-outcome, -lineupid) %>%
+    dplyr::select(-outcome, -lineupid, -games) %>%
     unlist() %>%
     table() %>% 
     as.data.frame(stringsAsFactors = FALSE)
@@ -73,7 +75,7 @@ optimize_lineups <- function(unique_lineup_object,
       dplyr::filter(lineupid != lu_to_remove_id)
     
     freq_table <- final_lineups %>%
-      dplyr::select(-outcome, -lineupid) %>%
+      dplyr::select(-outcome, -lineupid, -games) %>%
       unlist() %>%
       table() %>% 
       as.data.frame(stringsAsFactors = FALSE)
