@@ -1,43 +1,50 @@
 #' Create the possible lineups
 #' 
 #' @param player_position_list The list of players and their positions
+#' @param final_positions List of final positions that need to be filled
 #' @param salary_cap Upper limit for spend on a given lineup. Default is 50000
 #' @param salary_min Lower limit for spend on a given lineup. Default is 49000
 #' 
 #' @details Should there be a points filter here?
 #' 
 #' @export
-make_possible_lineups <- function(player_position_list, 
+make_possible_lineups <- function(player_position_list,
+                                  final_positions,
                                   salary_cap = 50000, 
                                   salary_min = 49000) {
   
-  position_list <- names(player_position_list)
   
-  output_mat <- matrix(rep(0, length(position_list)), ncol = length(position_list))
+  browser()
+  
+  output_mat <- matrix(rep(0, length(final_positions)), ncol = length(final_positions))
   output_df <- as.data.frame(output_mat)
-  names(output_df) <- position_list
+  names(output_df) <- final_positions
   
-  exhausted_positions <- c()
+  # exhausted_positions <- c()
   
-  for (p in position_list) {
+  for (i in 1:length(final_positions)) {
     
-    pos_df <- player_position_list[[p]]
+    posname <- final_positions[[i]]
+    pos_df <- player_position_list[[posname]]
     
     if (nrow(output_df) == 1) {
       output_df_expanded <- 
         output_df[rep(seq_len(nrow(output_df)), 
                       each = length(unique(pos_df$uid))), ]
-      output_df_expanded[[p]] <- unique(pos_df$uid)
+      output_df_expanded[, 1] <- unique(pos_df$uid)
       output_df <- output_df_expanded
-      exhausted_positions[length(exhausted_positions) + 1] <- p
+      # exhausted_positions[length(exhausted_positions) + 1] <- p
       gc()
       next
       
     }
 
-    exhausted_cols <- as.data.frame(output_df[, names(output_df) %in% exhausted_positions])
-    names(exhausted_cols) <- exhausted_positions
+    # exhausted_cols <- as.data.frame(output_df[, names(output_df) %in% exhausted_positions])
+    # names(exhausted_cols) <- exhausted_positions
     
+    cols_for_combos <- output_df[, !apply(output_df, 2, function(x) 0 %in% unique(x))] %>% 
+      as.data.frame()
+    names(cols_for_combos) <- final_positions[1:ncol(output_df)]
     unique_combo_vectors <- as.character(apply(exhausted_cols, 1, function(x) paste(x, collapse = ";")))
     unique_new_uid <- unique(pos_df$uid)
     combined_raw <- expand.grid(static = unique_combo_vectors, dynamic = unique_new_uid,
@@ -83,11 +90,11 @@ make_possible_lineups <- function(player_position_list,
     deduped_filtered_sal_tbl <- deduped_filtered_tbl[salary_filter, ]
     
     output_mat <- 
-      matrix(rep(rep(0, nrow(deduped_filtered_sal_tbl)), length(position_list)), ncol = length(position_list))
+      matrix(rep(rep(0, nrow(deduped_filtered_sal_tbl)), length(final_positions)), ncol = length(final_positions))
     output_mat[, c(1:ncol(deduped_filtered_sal_tbl))] <- as.matrix(deduped_filtered_sal_tbl)
     
     output_df <- as.data.frame(output_mat)
-    names(output_df) <- position_list
+    names(output_df) <- final_positions
     
     exhausted_positions[length(exhausted_positions) + 1] <- p
     gc()

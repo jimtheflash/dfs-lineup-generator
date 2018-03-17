@@ -7,10 +7,8 @@
 #' @export
 split_by_position <- function(projections, entries, multiple_positions = c("util", "flex", "g", "f")) {
   
-  position_list <- entries %>%
-    dplyr::select(-dplyr::ends_with("Fee"), -dplyr::ends_with("ID"), -dplyr::ends_with("Name")) %>%
-    names() %>%
-    tolower()  
+  position_list_raw <- names(entries) %>% tolower()
+  position_list <- unique(position_list_raw[!grepl("fee|name|id$", position_list_raw)])
   
   player_by_position <- list()
   player_by_position[1:length(position_list)] <- 0
@@ -61,7 +59,10 @@ split_by_position <- function(projections, entries, multiple_positions = c("util
     }
   }
   
-  return(player_by_position)
+  output <- list(players_by_position = player_by_position,
+                 final_positions = position_list_raw[!grepl("fee|name|id$", position_list_raw)])
+  
+  return(output)
 
   
 }
