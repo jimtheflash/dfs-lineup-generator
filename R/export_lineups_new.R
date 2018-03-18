@@ -25,13 +25,14 @@ export_lineups_new <- function(lineups,
                                               sport, "_", 
                                               gsub("[^[:alnum:]]", "", Sys.Date()), "_",
                                               slate, ".csv")) {
-  
-  pos_names <- entries %>%
-    dplyr::select(-dplyr::ends_with("ID"), -dplyr::ends_with("Name"), -dplyr::ends_with("Fee")) %>%
-    names() %>%
-    tolower()
-  
-  cols_to_import <- lineups[, names(lineups) %in% pos_names]
+
+  new_names <- gsub("\\.[1-9]", "",  names(lineups))
+  names(lineups) <- new_names
+
+  position_list_raw <- names(entries) %>% tolower()
+  position_list <- position_list_raw[!grepl("fee|name|id$", position_list_raw)]
+
+  cols_to_import <- lineups[, names(lineups) %in% position_list]
   
   num_import_rows <- nrow(cols_to_import)
   entry_rows <- nrow(entries)
@@ -60,7 +61,7 @@ export_lineups_new <- function(lineups,
     replaced_salaries[[i]] <- joined$salary_id
   }
   
-  fixed_names <- toupper(pos_names)
+  fixed_names <- gsub("\\.[1-9]", "", replaced_salaries)
   
   names(replaced_salaries) <- fixed_names
   
