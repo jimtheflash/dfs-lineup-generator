@@ -13,7 +13,6 @@ import_salaries <- function(sal_path,
                             from_entry = FALSE) {
 
   salary_import <- read.csv(sal_path,
-                            header = from_entry,
                             stringsAsFactors = FALSE,
                             na.strings = "")
   
