@@ -1,9 +1,11 @@
 #' Optimize the lineups
 #' 
 #' @param unique_lineup_object List of unique objects from \code{make_unique_lineups}
-#' @param n_lineups The number of lineups to save (default = 20)
-#' @param max_exposure The max percentage of lineups in which a single player can be included (default = 65)
-#' @param limit_search A value used to reduce search space (default 5000)
+#' @param n_lineups The number of lineups to save
+#' @param max_exposure The max percentage of lineups in which a single player can be included
+#' @param min_games A value indicating the minimum number of games to be represented on a lineups
+#' @param max_teamrep A value indicating the maximum number of players that can be on a single team
+#' @param limit_search A value used to reduce search space
 #' 
 #' @return List of optimal lineups
 #' 
@@ -12,18 +14,22 @@
 optimize_lineups <- function(unique_lineup_object,
                              n_lineups, 
                              max_exposure,
+                             min_games = 2,
+                             max_teamrep = 4,
                              limit_search = nrow(unique_lineup_object)) {
 
   lineup_id <- 1:nrow(unique_lineup_object)
   unique_lineup_object$lineupid <- lineup_id
   
   final_lineups <- unique_lineup_object %>%
-    dplyr::filter(games > 1) %>%
+    dplyr::filter(games >= min_games) %>%
+    dplyr::filter(max_team_rep <= max_teamrep) %>%
     dplyr::arrange(-outcome) %>%
     dplyr::filter(row_number() <= n_lineups)
   
   remaining_lineups <- unique_lineup_object %>%
-    dplyr::filter(games > 1) %>%
+    dplyr::filter(games >= min_games) %>%
+    dplyr::filter(max_team_rep <= max_teamrep) %>%
     dplyr::filter(lineupid <= limit_search) %>%
     dplyr::filter(!(lineupid %in% unique(final_lineups$lineupid))) %>%
     dplyr::arrange(-outcome)
