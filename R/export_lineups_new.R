@@ -61,15 +61,13 @@ export_lineups_new <- function(lineups,
     replaced_salaries[[i]] <- joined$salary_id
   }
   
-  fixed_names <- gsub("\\.[1-9]", "", replaced_salaries)
+  fixed_names <- gsub("\\.[1-9]", "", names(replaced_salaries)) %>% toupper()
   
   names(replaced_salaries) <- fixed_names
   
-  entries_filled <- entries
+  entry_ids <- entries[, !(names(entries) %in% fixed_names)]
+  entries_filled <- cbind(entry_ids, replaced_salaries)
   
-  for (i in fixed_names) {
-    entries_filled[[i]] <- replaced_salaries[[i]]
-  }
   
   if (randomize_entries == TRUE) {
     entries_filled <- entries_filled[order(rnorm(nrow(entries_filled))), ]
